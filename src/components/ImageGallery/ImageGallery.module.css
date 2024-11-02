@@ -1,0 +1,14 @@
+.listCard {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px 24px;
+  align-content: space-between;
+  justify-content: space-between;
+  padding-bottom: 15px;
+}
+
+.card {
+  display: block;
+  width: 360px;
+  height: 200px;
+}
