@@ -9,16 +9,23 @@ import { Toaster } from "react-hot-toast";
 import LoaderMoreBtn from "../LoadMoreBtn/LoaderMoreBtn";
 import Modal from "react-modal";
 import ImageModal from "../ImageModal/ImageModal";
+import { Image } from "./App.type";
+
+interface ImageData {
+  total_pages: number;
+  total: number;
+  results: Image[];
+}
 
 function App() {
-  const [query, setQuery] = useState("");
-  const [page, setPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
-  const [image, setImage] = useState([]);
-  const [totalPages, setTotalPages] = useState(0);
-  const [selectImage, setSelectImage] = useState(0);
-  const [modalIsOpen, setIsOpen] = useState(false);
+  const [query, setQuery] = useState<string>("");
+  const [page, setPage] = useState<number>(1);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
+  const [image, setImage] = useState<Image[]>([]);
+  const [totalPages, setTotalPages] = useState<number>(0);
+  const [selectImage, setSelectImage] = useState<Image | null>(null); // зберігає вибране зображення для модального вікна
+  const [modalIsOpen, setIsOpen] = useState<boolean>(false);
 
   useEffect(() => {
     Modal.setAppElement("#root");
@@ -27,11 +34,14 @@ function App() {
   useEffect(() => {
     if (!query) return;
 
-    const getData = async () => {
+    const getData = async (): Promise<void> => {
       try {
         setIsError(false);
         setIsLoading(true);
-        const data = await fetchImages(query, page);
+        const data: ImageData | undefined = await fetchImages(query, page);
+        if (!data) {
+          throw new Error("No data received from the API");
+        }
         setImage((prev) => [...prev, ...data.results]);
         setTotalPages(data.total_pages);
       } catch {
@@ -43,22 +53,22 @@ function App() {
     getData();
   }, [query, page]);
 
-  const handleSetQuery = (searchValue) => {
+  const handleSetQuery = (searchValue: string): void => {
     setQuery(searchValue);
     setImage([]);
     setPage(1);
   };
 
-  const handleChangePage = () => {
+  const handleChangePage = (): void => {
     setPage((prev) => prev + 1);
   };
 
-  const openModal = (image) => {
+  const openModal = (image: Image): void => {
     setSelectImage(image);
     setIsOpen(true);
   };
 
-  const closeModal = () => {
+  const closeModal = (): void => {
     setIsOpen(false);
   };
 

@@ -1,18 +1,23 @@
 import { FaSearch } from "react-icons/fa";
 import s from "./SearchBar.module.css";
 import toast from "react-hot-toast";
+import { FormEvent } from "react";
 
-const SearchBar = ({ setQuery }) => {
-  const handleSumbmit = (e) => {
+type Props = {
+  setQuery: (value: string) => void;
+};
+
+const SearchBar = ({ setQuery }: Props) => {
+  const handleSumbmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const form = e.target;
-    const query = form.elements.query.value.trim();
-    if (!query) {
+    const form = e.currentTarget;
+    const query = form.elements.namedItem("query") as HTMLInputElement;
+    if (!query || !query.value.trim()) {
       return toast.error(
         "The field is empty, enter text to search for an image."
       );
     }
-    setQuery(query);
+    setQuery(query.value.trim());
     form.reset();
   };
 

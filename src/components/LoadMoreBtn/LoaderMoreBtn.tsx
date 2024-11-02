@@ -1,5 +1,10 @@
 import s from "./LoaderMoreBtn.module.css";
-const LoaderMoreBtn = ({ changePage }) => {
+
+type Props = {
+  changePage: () => void;
+};
+
+const LoaderMoreBtn = ({ changePage }: Props) => {
   return (
     <button className={s.btn} onClick={changePage}>
       Load more
